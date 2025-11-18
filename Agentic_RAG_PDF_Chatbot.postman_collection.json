@@ -1,0 +1,339 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7g8h-9i0j-k1l2m3n4o5p6",
+		"name": "Agentic RAG PDF Chatbot",
+		"description": "Complete API collection for the Agentic RAG PDF Chatbot using FastAPI and Gemini API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Health & Info",
+			"item": [
+				{
+					"name": "Root - API Info",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								""
+							]
+						},
+						"description": "Get API information and available endpoints"
+					},
+					"response": []
+				},
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check API health status and Gemini API configuration"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for checking API status and information"
+		},
+		{
+			"name": "Document Management",
+			"item": [
+				{
+					"name": "Upload PDF",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": [],
+									"description": "Select a PDF file to upload (max 10MB)"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/upload",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"upload"
+							]
+						},
+						"description": "Upload a PDF document for processing. The document will be:\n1. Text extracted\n2. Split into chunks\n3. Converted to embeddings\n4. Stored in vector database"
+					},
+					"response": []
+				},
+				{
+					"name": "List All Documents",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents"
+							]
+						},
+						"description": "Get a list of all uploaded documents with their file IDs and names"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Document",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/documents/:file_id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"documents",
+								":file_id"
+							],
+							"variable": [
+								{
+									"key": "file_id",
+									"value": "",
+									"description": "The unique file ID of the document to delete"
+								}
+							]
+						},
+						"description": "Delete a specific document from the vector store and remove the physical file"
+					},
+					"response": []
+				},
+				{
+					"name": "Clear All Data",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clear-all",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clear-all"
+							]
+						},
+						"description": "⚠️ CAUTION: Clear all documents, vector store, and chat history. This action cannot be undone."
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing PDF documents"
+		},
+		{
+			"name": "Chat",
+			"item": [
+				{
+					"name": "Chat - Agentic Mode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"What is the main topic of the document?\",\n    \"use_agentic\": true,\n    \"use_history\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						},
+						"description": "Chat with documents using advanced agentic features:\n- Intent detection (factual, summarization, comparison, etc.)\n- Adaptive retrieval strategy\n- Context-aware responses"
+					},
+					"response": []
+				},
+				{
+					"name": "Chat - Standard Mode",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"Summarize the key points\",\n    \"use_agentic\": false,\n    \"use_history\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						},
+						"description": "Chat with documents using standard RAG mode without agentic features"
+					},
+					"response": []
+				},
+				{
+					"name": "Chat - Factual Question",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"What is the author's name?\",\n    \"use_agentic\": true,\n    \"use_history\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						},
+						"description": "Example: Ask a specific factual question about the document"
+					},
+					"response": []
+				},
+				{
+					"name": "Chat - Summarization",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"Provide a comprehensive summary of the entire document\",\n    \"use_agentic\": true,\n    \"use_history\": false\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						},
+						"description": "Example: Request a document summary (agentic mode will retrieve more chunks)"
+					},
+					"response": []
+				},
+				{
+					"name": "Chat - Comparison",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"query\": \"Compare and contrast the different approaches mentioned\",\n    \"use_agentic\": true,\n    \"use_history\": true\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/chat",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"chat"
+							]
+						},
+						"description": "Example: Ask for comparisons (retrieves information from multiple sections)"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for chatting with uploaded documents"
+		},
+		{
+			"name": "Chat History",
+			"item": [
+				{
+					"name": "Get Chat History",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/history",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"history"
+							]
+						},
+						"description": "Retrieve the complete chat conversation history"
+					},
+					"response": []
+				},
+				{
+					"name": "Clear Chat History",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clear",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clear"
+							]
+						},
+						"description": "Clear the chat history while keeping documents intact"
+					},
+					"response": []
+				}
+			],
+			"description": "Endpoints for managing chat conversation history"
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8000",
+			"type": "string"
+		}
+	]
+}
